@@ -1,0 +1,1 @@
+{"arguments": {"driver_a": "AAA", "driver_b": "XYZ"}, "content": [{"type": "text", "text": "No driver 'XYZ' in the 2025 style data. Drivers: AAA (Red), BBB (Red), CCC (Blue), DDD (Blue), EEE (Green), FFF (Green). Use the three-letter code."}], "isError": true}

@@ -1,0 +1,82 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mcp-app-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "web", "run", "dev:mcp-app"],
+      "port": 5174
+    },
+    {
+      "name": "api",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": ["--directory", "engine", "run", "race-engineer-api", "--port", "8000"],
+      "port": 8000
+    },
+    {
+      "name": "api-fake",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": ["--directory", "engine", "run", "race-engineer-api", "--port", "8000"],
+      "env": {
+        "RACE_ENGINEER_CHAT": "fake",
+        "RACE_ENGINEER_CHAT_SECRET": "dev-only-not-secret",
+        "RACE_ENGINEER_SAVED_ALLOW_FAKE": "1"
+      },
+      "port": 8000
+    },
+    {
+      "name": "web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "web", "run", "dev", "--", "--port", "3000"],
+      "port": 3000
+    },
+    {
+      "name": "web-prod",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "web", "run", "start", "--", "--port", "3000"],
+      "port": 3000
+    },
+    {
+      "name": "api-prodlike",
+      "runtimeExecutable": "make",
+      "runtimeArgs": ["api-prodlike"],
+      "port": 8001
+    },
+    {
+      "name": "api-prodlike-rate3",
+      "runtimeExecutable": "make",
+      "runtimeArgs": ["api-prodlike", "RATE_HOUR=3"],
+      "port": 8001
+    },
+    {
+      "name": "api-prodlike-smoke",
+      "runtimeExecutable": "make",
+      "runtimeArgs": ["api-prodlike", "RATE_HOUR=30"],
+      "port": 8001
+    },
+    {
+      "name": "api-prodlike-cap",
+      "runtimeExecutable": "make",
+      "runtimeArgs": ["api-prodlike", "CAP=0.01"],
+      "port": 8001
+    },
+    {
+      "name": "api-prodlike-paused",
+      "runtimeExecutable": "make",
+      "runtimeArgs": ["api-prodlike", "PAUSED=1"],
+      "port": 8001
+    },
+    {
+      "name": "api-prodlike-off",
+      "runtimeExecutable": "make",
+      "runtimeArgs": ["api-prodlike", "CHAT=off"],
+      "port": 8001
+    },
+    {
+      "name": "web-prodlike",
+      "runtimeExecutable": "make",
+      "runtimeArgs": ["web-prodlike"],
+      "port": 3001
+    }
+  ]
+}

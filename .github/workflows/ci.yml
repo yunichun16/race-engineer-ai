@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  engine:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engine
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run pyright
+      - run: uv run pytest
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - name: Script tests (the demo video's captions)
+        run: node --test "scripts/**/*.test.ts"
+      - run: npm run build
+      # Initial JavaScript per page against the M6 baseline plus 5% (M7 plan decision 11).
+      - run: npm run budgets
+      - run: npm run build:mcp-app
+
+  # The API's serve-only install (M7 plan 6.2): no torch, MLflow, FastF1, matplotlib or ONNX
+  # Runtime, and the app, every tool and the stateless MCP server still start (scripts/serve_check.py).
+  serve:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engine
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked --no-default-groups
+      - run: uv run --no-sync python scripts/serve_check.py --local
+
+  # No data, model weights, snapshots, saved answers, videos or secrets in the repository.
+  hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: bash .github/scripts/check-tracked.sh
+
+  # The site's production build against the API on made-up data, the scripted chat and the limits
+  # on (M7 plan 9): web/scripts/ci-smoke.ts, once at 2 questions an hour, then after a restart with
+  # a $0 daily cap. The servers run in the background; their logs print if a step fails.
+  e2e:
+    runs-on: ubuntu-latest
+    env:
+      SYN: /tmp/syn
+      NEXT_PUBLIC_API_URL: http://127.0.0.1:8000
+      RACE_ENGINEER_DATA: /tmp/syn
+      RACE_ENGINEER_HOST: 0.0.0.0 # behave as on a public host (uvicorn listens on 127.0.0.1)
+      RACE_ENGINEER_CHAT: fake
+      RACE_ENGINEER_CHAT_SECRET: ci-only-not-secret
+      RACE_ENGINEER_LIMITS: "on"
+      RACE_ENGINEER_LIMITS_STORE: memory
+      RACE_ENGINEER_SAVED_ALLOW_FAKE: "1"
+      RACE_ENGINEER_CORS_ORIGINS: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      # The serve set and the dev group: the synthetic datasets need pytest, not torch.
+      - run: uv sync --locked --no-default-groups --group dev
+        working-directory: engine
+      - run: uv run --no-sync python scripts/synthetic_tree.py "$SYN"
+        working-directory: engine
+      - run: npm ci
+        working-directory: web
+      - run: npm run build
+        working-directory: web
+      - name: Start the site
+        working-directory: web
+        run: nohup npx next start -p 3000 > /tmp/web.log 2>&1 &
+      - name: Start the API, 2 questions an hour
+        working-directory: engine
+        run: |
+          RACE_ENGINEER_RATE_HOUR=2 nohup .venv/bin/uvicorn race_engineer.api.app:create_app --factory \
+            --host 127.0.0.1 --port 8000 --no-access-log --no-proxy-headers > /tmp/api-rate.log 2>&1 &
+          echo $! > /tmp/api.pid
+      - run: node scripts/ci-smoke.ts --phase rate --site http://localhost:3000 --api http://127.0.0.1:8000
+        working-directory: web
+      - name: Restart the API with a $0 daily cap
+        working-directory: engine
+        run: |
+          kill "$(cat /tmp/api.pid)"
+          while kill -0 "$(cat /tmp/api.pid)" 2>/dev/null; do sleep 0.2; done
+          RACE_ENGINEER_DAILY_CAP_USD=0 nohup .venv/bin/uvicorn race_engineer.api.app:create_app --factory \
+            --host 127.0.0.1 --port 8000 --no-access-log --no-proxy-headers > /tmp/api-cap.log 2>&1 &
+      - run: node scripts/ci-smoke.ts --phase cap --site http://localhost:3000 --api http://127.0.0.1:8000
+        working-directory: web
+      - name: Server logs
+        if: failure()
+        run: tail -n 60 /tmp/web.log /tmp/api-rate.log /tmp/api-cap.log 2>/dev/null || true

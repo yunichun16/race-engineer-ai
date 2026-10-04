@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MCP App dev host</title>
+    <style>
+      body { margin: 0; padding: 16px; font-family: system-ui, sans-serif; background: #f4f4f5; }
+      body.dark { background: #1c1c1e; color: #f2f2f7; }
+      header { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; font-size: 13px; }
+      header a { color: inherit; }
+      header a[aria-current="page"] { font-weight: 600; text-decoration: none; }
+      .spacer { flex: 1; }
+      #error { color: #d03b3b; font-size: 13px; }
+      iframe { display: block; width: 100%; max-width: 760px; border: 1px solid #d4d4d8; border-radius: 12px; background: #fff; }
+      iframe.narrow { max-width: 360px; }
+      body.dark iframe { border-color: #3a3a3c; background: #2c2c2e; }
+      #messages { max-width: 760px; margin-top: 12px; font-size: 13px; }
+      #messages h2 { margin: 0 0 4px; font-size: 13px; }
+      #messages ol { margin: 0; padding-left: 20px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong>MCP App dev host</strong>
+      <span>(stands in for Claude, replaying a saved tool result)</span>
+      <nav id="apps"></nav>
+      <span class="spacer"></span>
+      <button id="light">Light</button>
+      <button id="dark">Dark</button>
+      <button id="wide">Wide</button>
+      <button id="narrow">Narrow</button>
+    </header>
+    <p id="error" hidden></p>
+    <iframe id="app" title="MCP App" height="320"></iframe>
+    <section id="messages" hidden>
+      <h2>Messages sent to the conversation</h2>
+      <ol id="log"></ol>
+    </section>
+    <script type="module" src="./dev-host.ts"></script>
+  </body>
+</html>

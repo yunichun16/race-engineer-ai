@@ -1,0 +1,46 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "24.x"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:vercel": "node scripts/check-env.ts && node scripts/snapshots.ts --tolerant && node scripts/saved.ts pull --api \"${NEXT_PUBLIC_API_URL:-http://127.0.0.1:8000}\" --out public/saved --tolerant && next build",
+    "budgets": "node scripts/budgets.ts",
+    "build:mcp-app": "npm run build:mcp-app:telemetry && npm run build:mcp-app:compare-laps && npm run build:mcp-app:find-mistakes && npm run build:mcp-app:explain-corner && npm run build:mcp-app:compare-styles && npm run build:mcp-app:race-summary",
+    "build:mcp-app:telemetry": "MCP_APP=telemetry vite build --config vite.mcp-app.config.ts",
+    "build:mcp-app:compare-laps": "MCP_APP=compare-laps vite build --config vite.mcp-app.config.ts",
+    "build:mcp-app:find-mistakes": "MCP_APP=find-mistakes vite build --config vite.mcp-app.config.ts",
+    "build:mcp-app:explain-corner": "MCP_APP=explain-corner vite build --config vite.mcp-app.config.ts",
+    "build:mcp-app:compare-styles": "MCP_APP=compare-styles vite build --config vite.mcp-app.config.ts",
+    "build:mcp-app:race-summary": "MCP_APP=race-summary vite build --config vite.mcp-app.config.ts",
+    "dev:mcp-app": "vite --config vite.mcp-app.config.ts --port 5174 --strictPort",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "node --test \"src/**/*.test.ts\"",
+    "smoke": "node scripts/site-smoke.ts"
+  },
+  "dependencies": {
+    "next": "16.3.7",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/ext-apps": "^2.0.3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.7",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vite": "^8.3.1",
+    "vite-plugin-singlefile": "^2.3.3"
+  }
+}

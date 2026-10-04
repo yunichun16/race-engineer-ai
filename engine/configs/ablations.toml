@@ -1,0 +1,72 @@
+# Telemetry Transformer ablations on the full dataset: `make experiments`, i.e.
+#   uv run race-engineer-experiments --grid configs/ablations.toml
+# [base] takes any MAEConfig, TrainConfig or EvalConfig field (see models/experiments.py); each
+# [[variant]] is a name plus what differs. d_ff follows d_model (2x) unless set.
+
+report = "m3_ablations.md"
+
+[base]
+model_type = "transformer"
+d_model = 128
+n_heads = 4
+n_layers = 4
+embed_dim = 64
+dropout = 0.1
+objective = "nll"
+use_context = true
+signal_channels = ["speed", "throttle", "brake", "gear", "offset_m"]
+epochs = 20
+batch_size = 512
+lr = 1e-3
+warmup_steps = 300
+mask_ratio = 0.5
+# Train 2022-2024, validate 2025, test 2026 (the new cars). Needs 2022-2024 fully processed: a
+# split training on under 40% of the segments is refused.
+split = "temporal"
+seed = 0
+bootstrap = 100
+
+[[variant]]
+name = "baseline"
+
+[[variant]]
+name = "objective_mse"
+objective = "mse"
+
+[[variant]]
+name = "no_context"
+use_context = false
+
+[[variant]]
+name = "mask_0.3"
+mask_ratio = 0.3
+
+[[variant]]
+name = "mask_0.7"
+mask_ratio = 0.7
+
+[[variant]]
+name = "small_d64"
+d_model = 64
+
+[[variant]]
+name = "large_d256"
+d_model = 256
+
+[[variant]]
+name = "no_offset_channel"
+signal_channels = ["speed", "throttle", "brake", "gear"]
+
+[[variant]]
+name = "no_gear_channel"
+signal_channels = ["speed", "throttle", "brake", "offset_m"]
+
+[[variant]]
+name = "cnn"
+model_type = "cnn"
+
+# The baseline again, with whole circuits held out instead of seasons: does it carry over to
+# tracks it has never seen?
+[[variant]]
+name = "unseen_tracks"
+split = "leave_tracks_out"

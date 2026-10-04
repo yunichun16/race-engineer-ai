@@ -1,0 +1,483 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+/* The chart code is plain DOM with its own scoped CSS (src/charts/styles). Keep it out of
+   Tailwind's class scan, so words in it never generate utilities that could restyle a chart. */
+@source not "../charts";
+@source not "../mcp-app";
+
+/* Tailwind names for the tokens: text-fg, bg-raised, border-line, bg-glass-strong, rounded-card
+   and so on. Components use these, never hex colours or dark: variants; the theme switches by
+   swapping the tokens. The series colours are the charts' own (driver A blue, driver B orange)
+   and never act as accents. Lime is for the one primary action per view (spec e). */
+@theme inline {
+  --color-fg: var(--color-text-primary);
+  --color-muted: var(--color-text-secondary);
+  --color-surface: var(--color-background-primary);
+  --color-raised: var(--color-background-secondary);
+  --color-line: var(--color-border-tertiary);
+  --color-line-strong: var(--color-border-secondary);
+  --color-focus: var(--color-ring-primary);
+  --color-caution: var(--color-text-warning);
+  --color-danger: var(--color-text-danger);
+  --color-series-a: var(--a);
+  --color-series-b: var(--b);
+
+  --color-page: var(--page);
+  --color-faint: var(--faint);
+  --color-edge: var(--edge);
+  --color-hairline: var(--hairline);
+  --color-glass-strong: var(--glass-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-line: var(--accent-line);
+  --color-accent-text: var(--accent-text);
+
+  /* The type scale (spec d): text-display, text-h2, text-h3, text-title, text-result-xl,
+     text-result-l, text-figure, text-lead. Families come from font-serif and font-mono, which
+     read the unlayered --font-serif and --font-mono in tokens.css. */
+  --text-display: var(--fs-display);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.03em;
+  --text-display--font-weight: 600;
+  --text-h2: var(--fs-h2);
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: var(--fs-h3);
+  --text-h3--line-height: 1.2;
+  --text-title: var(--fs-title);
+  --text-title--line-height: 1.3;
+  --text-title--letter-spacing: -0.01em;
+  --text-title--font-weight: 600;
+  --text-result-xl: var(--fs-result-xl);
+  --text-result-xl--line-height: 1;
+  --text-result-xl--letter-spacing: -0.03em;
+  --text-result-l: var(--fs-result-l);
+  --text-result-l--line-height: 1;
+  --text-result-l--letter-spacing: -0.02em;
+  --text-figure: var(--fs-figure);
+  --text-figure--line-height: 1.1;
+  --text-lead: var(--fs-lead);
+  --text-lead--line-height: 1.6;
+}
+
+@theme {
+  --radius-card: 24px;
+  --radius-panel: 28px;
+}
+
+/* ---------- The page and the ambient layer (spec c) ---------- */
+
+/* The page colour goes on <html> only: a body background would paint over the ambient layer,
+   which sits at z-index -1 between the two. In-page links (#main, #featured, #limits) land below
+   the floating header, not under it. */
+html {
+  background: var(--page);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+
+/* clip, not hidden: hidden would make body a scroll container and break the sticky header. The
+   side insets are 0 except in landscape on a notched phone, where the installed app runs under
+   the notch (viewport-fit=cover). */
+body {
+  background: transparent;
+  overflow-x: clip;
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* Three soft pools of light and a faint grid, fixed behind everything (the root layout renders
+   <div class="ambient">). Nothing else needs a z-index for it. */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40vmax 40vmax at 12% 8%, var(--pool-1), transparent 70%),
+    radial-gradient(35vmax 35vmax at 88% 30%, var(--pool-2), transparent 70%),
+    radial-gradient(45vmax 45vmax at 55% 100%, var(--pool-3), transparent 70%);
+}
+
+.ambient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+  background-image:
+    linear-gradient(var(--bg-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 10%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse at 50% 10%, #000 30%, transparent 75%);
+}
+
+/* While the theme switches (lib/theme.ts), nothing fades: the new colours apply at once. */
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+}
+
+/* An open modal (the phone menu) stops the page behind it from scrolling. */
+html:has(dialog:modal) {
+  overflow: hidden;
+}
+
+/* In the installed iOS app (black-translucent status bar) the status bar's text is white, so on
+   the light page it would be unreadable: a status-bar-high dark strip goes under it. Under
+   System-dark it sits on navy, where it changes nothing. The inset is 0 in a browser tab. */
+@media (display-mode: standalone) {
+  :root:not([data-theme="dark"]) body::before {
+    content: "";
+    position: fixed;
+    inset: 0 0 auto;
+    height: env(safe-area-inset-top, 0px);
+    background: rgb(20 26 38 / 0.82);
+    z-index: 50;
+    pointer-events: none;
+  }
+}
+
+/* In base, so a utility (focus-visible:-outline-offset-2 on a row) can still adjust it. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-ring-primary);
+    outline-offset: 2px;
+  }
+
+  /* The skip link moves focus to <main tabindex="-1">; a ring round the whole page says nothing. */
+  main[tabindex="-1"]:focus {
+    outline: none;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+}
+
+/* ---------- Glass (spec b) ---------- */
+
+/* Only the surfaces spec b allows: .glass-nav for the header and the phone selection bar,
+   .glass-strong for the menu sheet, .glass for cards, notices, the Ask box and the composer,
+   .glass-panel for chart cards and result panels, .glass-inset for glass inside glass. Never a second
+   blur inside a blurred parent, and about 8 blurred surfaces in view at most. */
+@layer components {
+  .glass,
+  .glass-strong,
+  .glass-nav {
+    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--glass-filter);
+    border: 1px solid var(--edge);
+    box-shadow: var(--shadow-glass), inset 0 1px 0 var(--highlight);
+  }
+  .glass {
+    background: var(--glass);
+  }
+  .glass-strong {
+    background: var(--glass-strong);
+  }
+  .glass-nav {
+    background: var(--glass-nav);
+    box-shadow: var(--shadow-glass-sm), inset 0 1px 0 var(--highlight);
+  }
+  .glass-sm {
+    box-shadow: var(--shadow-glass-sm), inset 0 1px 0 var(--highlight);
+  }
+  /* The look without a second blur: glass inside glass, and repeated panels. */
+  .glass-inset {
+    background: var(--glass-strong);
+    border: 1px solid var(--edge);
+    box-shadow: inset 0 1px 0 var(--highlight);
+  }
+  .glass-panel {
+    background: var(--glass-strong);
+    border: 1px solid var(--edge);
+    box-shadow: var(--shadow-glass), inset 0 1px 0 var(--highlight);
+  }
+
+  /* ---------- Type helpers (spec d, g) ---------- */
+
+  /* A micro-label names a thing ("ONE FLAGGED CORNER, EXPLAINED"); never a control's only label. */
+  .micro {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    line-height: 1.5;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  /* The type scale's families (spec d), which a text-* size can't carry: the result sizes are mono
+     with tabular figures, and the display headline's <em> is serif italic. A utility on the element
+     (font-sans, font-medium) still wins, from the later utilities layer. */
+  .text-result-xl,
+  .text-result-l,
+  .text-figure {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .text-display em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  /* A static tag: a corner's type, "Energy management". Not a button. */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--edge);
+    border-radius: var(--radius-tag);
+    padding: 2px 7px;
+  }
+
+  /* Links are ink, underlined; the underline darkens on hover. Never lime, never a series colour. */
+  .link {
+    color: var(--color-text-primary);
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-border-secondary);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    transition: text-decoration-color var(--dur-hover);
+  }
+  .link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  /* ---------- Motion classes (spec f) ---------- */
+
+  /* A loading block's sweep (Skeleton, ChartSkeleton). Static with reduced motion. */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, var(--edge), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 1.6s linear infinite;
+  }
+
+  /* Sections fade up once (components/motion/useReveal). Only an element below the fold when the
+     page loads gets .pending, so nothing is ever hidden without JavaScript, and nothing already on
+     screen blinks. Never on an element that contains position: sticky. */
+  .reveal {
+    transition:
+      opacity var(--dur-reveal) var(--ease-out),
+      transform var(--dur-reveal) var(--ease-out);
+  }
+  .reveal.pending {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  /* The landing hero's racing line draws once (an SVG path with pathLength="1"), then the flagged
+     corner lights and the readout floats in. */
+  .draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw var(--dur-draw) var(--ease-out) 0.4s forwards;
+  }
+  .lit {
+    opacity: 0;
+    animation: fade-in 0.9s var(--ease-out) 2.6s forwards;
+  }
+  .float-in {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: float-in var(--dur-reveal) var(--ease-out) 2.9s forwards;
+  }
+
+  /* The chat's streaming spinner: a ring whose top turns. A still ring with reduced motion. */
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    flex: none;
+    border-radius: 9999px;
+    border: 2px solid var(--edge);
+    border-top-color: var(--color-text-primary);
+    animation: spin 0.9s linear infinite;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes float-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- The phone menu sheet (MobileMenu) ---------- */
+
+/* Plain CSS, unlayered, so it beats utilities: the sheet floats 12 px in from the edges, clears
+   the status bar in the installed app (the inset is 0 in a browser tab), and slides in from the
+   right as it opens. */
+.menu-sheet {
+  margin: max(12px, env(safe-area-inset-top, 0px)) 12px 12px auto;
+  width: min(100% - 24px, 22rem);
+  height: calc(100dvh - 24px - env(safe-area-inset-top, 0px));
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--dur-state) var(--ease-out),
+    transform var(--dur-state) var(--ease-out),
+    overlay var(--dur-state) allow-discrete,
+    display var(--dur-state) allow-discrete;
+}
+.menu-sheet:not([open]) {
+  opacity: 0;
+  transform: translateX(16px);
+}
+@starting-style {
+  .menu-sheet[open] {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+/* ---------- Fallbacks: these win over the layers on purpose ---------- */
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .glass-strong,
+  .glass-nav {
+    background: var(--glass-solid);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-strong,
+  .glass-nav,
+  .glass-inset,
+  .glass-panel {
+    background: var(--glass-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .ambient::after {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .glass,
+  .glass-strong,
+  .glass-nav,
+  .glass-inset,
+  .glass-panel {
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .ambient {
+    display: none;
+  }
+}
+
+@media print {
+  .ambient,
+  body > header,
+  .menu-sheet {
+    display: none;
+  }
+  html {
+    background: #fff;
+    color: #000;
+  }
+  .glass,
+  .glass-strong,
+  .glass-nav,
+  .glass-inset,
+  .glass-panel {
+    background: #fff;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .reveal.pending {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Reduced motion: every transition and animation ends at once, and the keyframed elements show
+   their end states outright, so nothing waits on a 0.01 ms animation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  .draw {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .lit,
+  .float-in {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .reveal.pending {
+    opacity: 1;
+    transform: none;
+  }
+  .shimmer::after,
+  .spinner {
+    animation: none;
+  }
+}

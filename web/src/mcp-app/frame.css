@@ -1,0 +1,17 @@
+/* The MCP App frame inside Claude: the page around a chart's .re-chart-frame. Only the MCP
+   pages load this; the website has its own page styles. */
+
+:root {
+  color-scheme: light dark;
+}
+
+/* A scrollbar appearing while the host catches up on the height mustn't change the width
+   (the charts redraw on width changes). */
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+  background: transparent;
+}

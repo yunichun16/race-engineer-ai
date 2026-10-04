@@ -1,0 +1,41 @@
+/* The charts' colour tokens, read from the host's theme variables (Claude's, or the website's,
+   which uses the same names) with fallbacks. On :root, so the website's own components can use
+   the series colours too; the website never defines these names itself.
+
+   Series colours --a and --b: categorical slots 1 and 2 of the dataviz palette, stepped per
+   theme and validated for colour-vision deficiency on both surfaces. --warn and --loss follow
+   the host's warning and danger text colours; the fallbacks are the dataviz status steps, with
+   warning darkened in light mode so it can carry text (5.3:1 on the light surface). Status
+   colours never carry meaning alone: they come with a label. */
+:root {
+  --fg: var(--color-text-primary, #1d1d1f);
+  --fg-muted: var(--color-text-secondary, #6e6e73);
+  --grid: var(--color-border-tertiary, rgba(128, 128, 128, 0.18));
+  --corner: var(--color-border-secondary, rgba(128, 128, 128, 0.45));
+  --a: #2a78d6;
+  --b: #eb6834;
+  --surface: var(--color-background-primary, #fcfcfb);
+  --axis: var(--color-border-secondary, rgba(128, 128, 128, 0.45));
+  --warn: var(--color-text-warning, #9a5b00);
+  --loss: var(--color-text-danger, #d03b3b);
+}
+
+[data-theme="dark"] {
+  --fg: var(--color-text-primary, #f2f2f7);
+  --fg-muted: var(--color-text-secondary, #a1a1a6);
+  --a: #3987e5;
+  --b: #d95926;
+  --surface: var(--color-background-primary, #1a1a19);
+  --warn: var(--color-text-warning, #fab219);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fg: var(--color-text-primary, #f2f2f7);
+    --fg-muted: var(--color-text-secondary, #a1a1a6);
+    --a: #3987e5;
+    --b: #d95926;
+    --surface: var(--color-background-primary, #1a1a19);
+    --warn: var(--color-text-warning, #fab219);
+  }
+}

@@ -1,0 +1,12 @@
+event: status
+data: {"text": "Considering the question"}
+
+event: text
+data: {"delta": "Predicting the 2027 season "}
+
+event: refusal
+data: {"message": "Claude declined to answer this. Try asking another way.", "category": null}
+
+event: done
+data: {"history": [], "signature": "0123456789ab.5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f", "questions_used": 0, "questions_left": 8, "stop_reason": "refusal", "model": "scripted", "usage": {"input": 2, "output": 125, "cache_read": 5499, "cache_write": 371}, "cost_usd": 0.003281, "request_id": "0ebc385d153c"}
+

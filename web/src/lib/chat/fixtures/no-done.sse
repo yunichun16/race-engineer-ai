@@ -1,0 +1,11 @@
+event: status
+data: {"text": "Looking for the flagged corners"}
+
+event: text
+data: {"delta": "Checking."}
+
+event: tool_call
+data: {"id": "toolu_cut_0", "name": "find_mistakes", "input": {"event": "Sample Grand Prix", "year": 2026, "session": "Q"}}
+
+event: text
+data: {"delta": "cut of

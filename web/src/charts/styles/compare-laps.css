@@ -1,0 +1,94 @@
+/* The lap comparison, scoped under .re-chart--compare-laps. The driver colours (--a, --b) are
+   in tokens.css; the focus ring and the corner table's styles are in base.css, shared with the
+   other charts. */
+
+.re-chart--compare-laps .cmp-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.re-chart--compare-laps .title-row,
+.re-chart--compare-laps .drivers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 16px;
+}
+
+.re-chart--compare-laps .title-row {
+  justify-content: space-between;
+}
+
+.re-chart--compare-laps .title {
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--compare-laps .subtitle,
+.re-chart--compare-laps .meta {
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.re-chart--compare-laps .driver {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.re-chart--compare-laps .key {
+  display: inline-block;
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--swatch);
+  align-self: center;
+}
+
+.re-chart--compare-laps .time {
+  font-weight: var(--font-weight-semibold, 600);
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--compare-laps .readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 14px;
+  min-height: 18px;
+  color: var(--fg-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--compare-laps .readout strong {
+  color: var(--fg);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--compare-laps .readout .key {
+  width: 10px;
+  height: 2px;
+  margin-right: 4px;
+}
+
+/* Horizontal drags move the crosshair; vertical swipes still scroll the conversation. */
+.re-chart--compare-laps svg {
+  touch-action: pan-y;
+}
+
+.re-chart--compare-laps svg .panel-title {
+  font-size: 10px;
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+@container re-chart (max-width: 480px) {
+  .re-chart--compare-laps .readout {
+    min-height: 34px;
+  }
+}

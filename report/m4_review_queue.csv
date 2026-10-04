@@ -1,0 +1,51 @@
+rank,id,event,session,driver,team,lap,corner_label,type_label,time_lost_s,priority,track_limits,ref_kind,inspected
+1,2026_12_R_22_43_T13,Dutch Grand Prix,R,TSU,Racing Bulls,43,13,track limits / off track (race control),3.597,4.069,True,driver,True
+2,2026_05_S_31_19_T8,Canadian Grand Prix,S,OCO,Haas F1 Team,19,8,track limits / off track (race control),2.564,3.007,True,driver,True
+3,2026_01_R_55_53_T3,Australian Grand Prix,R,SAI,Williams,53,3,track limits / off track (race control),2.577,2.83,True,driver,False
+4,2026_05_R_44_22_T8,Canadian Grand Prix,R,HAM,Ferrari,22,8,track limits / off track (race control),2.158,2.647,True,driver,True
+5,2026_05_R_18_8_T8,Canadian Grand Prix,R,STR,Aston Martin,8,8,track limits / off track (race control),2.067,2.453,True,driver,True
+6,2026_06_Q_16_26_T18,Monaco Grand Prix,Q,LEC,Ferrari,26,18,unclear,2.997,2.431,False,driver,True
+7,2026_09_Q_30_2_T16,British Grand Prix,Q,LAW,Racing Bulls,2,16,early braking,2.473,2.096,False,field,True
+8,2026_05_Q_27_18_T14,Canadian Grand Prix,Q,HUL,Audi,18,14,track limits / off track (race control),1.292,1.792,True,driver,True
+9,2026_05_Q_81_10_T14,Canadian Grand Prix,Q,PIA,McLaren,10,14,track limits / off track (race control),1.487,1.779,True,driver,True
+10,2026_13_R_27_22_T1,Italian Grand Prix,R,HUL,Audi,22,1,track limits / off track (race control),1.325,1.668,True,driver,False
+11,2026_14_R_23_55_T3,Spanish Grand Prix,R,ALB,Williams,55,3,over-slowing,1.788,1.666,False,driver,False
+12,2026_12_S_55_12_T1,Dutch Grand Prix,S,SAI,Williams,12,1,late throttle / wide exit,2.036,1.509,False,driver,True
+13,2026_01_Q_43_2_T7,Australian Grand Prix,Q,COL,Alpine,2,7,track limits / off track (race control),0.995,1.495,True,field,True
+14,2026_09_Q_55_2_T3,British Grand Prix,Q,SAI,Williams,2,3,track limits / off track (race control),1.014,1.412,True,field,True
+15,2026_04_S_44_8_T11,Miami Grand Prix,S,HAM,Ferrari,8,11,track limits / off track (race control),1.029,1.373,True,driver,True
+16,2026_05_S_10_22_T1,Canadian Grand Prix,S,GAS,Alpine,22,1,track limits / off track (race control),1.065,1.273,True,driver,True
+17,2026_05_SQ_44_10_T14,Canadian Grand Prix,SQ,HAM,Ferrari,10,14,track limits / off track (race control),0.842,1.231,True,driver,True
+18,2026_05_SQ_55_9_T14,Canadian Grand Prix,SQ,SAI,Williams,9,14,track limits / off track (race control),1.019,1.082,True,driver,True
+19,2026_14_Q_41_5_T6,Spanish Grand Prix,Q,LIN,Racing Bulls,5,6,over-slowing,1.07,1.07,False,field,True
+20,2026_08_R_43_14_T9,Austrian Grand Prix,R,COL,Alpine,14,9,over-slowing,1.061,1.045,False,driver,True
+21,2026_08_R_12_22_T3,Austrian Grand Prix,R,ANT,Mercedes,22,3,track limits / off track (race control),0.865,1.027,True,driver,True
+22,2026_09_SQ_10_5_T15,British Grand Prix,SQ,GAS,Alpine,5,15,hesitation / traction loss,1.098,1.018,False,field,True
+23,2026_15_Q_23_3_T16,Azerbaijan Grand Prix,Q,ALB,Williams,3,16,track limits / off track (race control),0.776,0.951,True,field,True
+24,2026_11_R_23_6_T12A,Hungarian Grand Prix,R,ALB,Williams,6,12A,unclear,1.408,0.899,False,field,True
+25,2026_12_S_11_21_T1,Dutch Grand Prix,S,PER,Cadillac,21,1,late throttle / wide exit,1.477,0.882,False,driver,False
+26,2026_13_R_18_25_T7,Italian Grand Prix,R,STR,Aston Martin,25,7,track limits / off track (race control),0.414,0.86,True,driver,False
+27,2026_14_R_41_47_T1,Spanish Grand Prix,R,LIN,Racing Bulls,47,1,track limits / off track (race control),0.469,0.837,True,driver,False
+28,2026_01_R_43_2_T1,Australian Grand Prix,R,COL,Alpine,2,1,unclear,0.873,0.833,False,driver,False
+29,2026_15_R_1_16_T5,Azerbaijan Grand Prix,R,NOR,McLaren,16,5,over-slowing,0.795,0.781,False,driver,False
+30,2026_04_S_3_8_T11,Miami Grand Prix,S,VER,Red Bull Racing,8,11,track limits / off track (race control),0.441,0.756,True,driver,True
+31,2026_03_R_11_20_T13,Japanese Grand Prix,R,PER,Cadillac,20,13,track limits / off track (race control),0.534,0.734,True,driver,False
+32,2026_01_Q_27_17_T14,Australian Grand Prix,Q,HUL,Audi,17,14,late throttle / wide exit,1.035,0.702,False,driver,True
+33,2026_07_R_81_38_T14,Barcelona Grand Prix,R,PIA,McLaren,38,14,track limits / off track (race control),0.232,0.698,True,driver,False
+34,2026_12_R_1_36_T2,Dutch Grand Prix,R,NOR,McLaren,36,2,late throttle / wide exit,0.786,0.649,False,driver,False
+35,2026_04_Q_5_2_T5,Miami Grand Prix,Q,BOR,Audi,2,5,late throttle / wide exit,0.68,0.643,False,field,True
+36,2026_02_R_41_41_T11,Chinese Grand Prix,R,LIN,Racing Bulls,41,11,over-slowing,0.806,0.629,False,field,True
+37,2026_15_Q_16_8_T15,Azerbaijan Grand Prix,Q,LEC,Ferrari,8,15,late throttle / wide exit,0.873,0.595,False,field,True
+38,2026_07_R_12_10_T10,Barcelona Grand Prix,R,ANT,Mercedes,10,10,track limits / off track (race control),0.297,0.523,True,driver,False
+39,2026_13_Q_63_10_T1,Italian Grand Prix,Q,RUS,Mercedes,10,1,over-slowing,0.636,0.449,False,field,True
+40,2026_11_Q_12_6_T14,Hungarian Grand Prix,Q,ANT,Mercedes,6,14,track limits / off track (race control),-0.509,0.438,True,field,False
+41,2026_10_R_5_37_T19,Belgian Grand Prix,R,BOR,Audi,37,19,track limits / off track (race control),0.148,0.43,True,driver,False
+42,2026_09_R_43_32_T1,British Grand Prix,R,COL,Alpine,32,1,track limits / off track (race control),0.031,0.429,True,driver,False
+43,2026_09_R_1_17_T6,British Grand Prix,R,NOR,McLaren,17,6,over-slowing,0.557,0.417,False,driver,False
+44,2026_15_R_12_4_T16,Azerbaijan Grand Prix,R,ANT,Mercedes,4,16,late throttle / wide exit,0.491,0.413,False,driver,False
+45,2026_10_R_30_17_T6,Belgian Grand Prix,R,LAW,Racing Bulls,17,6,track limits / off track (race control),0.379,0.396,True,driver,False
+46,2026_13_Q_18_2_T4,Italian Grand Prix,Q,STR,Aston Martin,2,4,late throttle / wide exit,0.439,0.374,False,field,False
+47,2026_04_R_11_12_T11,Miami Grand Prix,R,PER,Cadillac,12,11,track limits / off track (race control),-0.09,0.369,True,driver,True
+48,2026_09_S_16_3_T5,British Grand Prix,S,LEC,Ferrari,3,5,unclear,0.412,0.368,False,driver,False
+49,2026_04_R_16_17_T7,Miami Grand Prix,R,LEC,Ferrari,17,7,late throttle / wide exit,0.376,0.363,False,driver,False
+50,2026_03_R_43_28_T14,Japanese Grand Prix,R,COL,Alpine,28,14,hesitation / traction loss,0.362,0.356,False,driver,False

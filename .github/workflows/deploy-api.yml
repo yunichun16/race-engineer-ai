@@ -1,0 +1,60 @@
+name: Deploy API
+
+# Deploys the API to Modal (M7 plan 9; docs/DEPLOY.md): the same as `make deploy-api` from a Mac.
+# Manual only: Actions → Deploy API → Run workflow. No push, pull request or schedule starts it.
+# It needs two repository secrets, MODAL_TOKEN_ID and MODAL_TOKEN_SECRET (a Modal token made for
+# this), and takes the browser origin from the repository variable SITE_ORIGIN (and, optionally,
+# PREVIEW_REGEX). None is set, so until you add them it stops at its first step without
+# contacting Modal. The served data is uploaded from the Mac (make serve-upload), never from here,
+# and the chat's secrets live in Modal (the secret race-engineer-api), not in GitHub.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-api
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SITE_ORIGIN: ${{ vars.SITE_ORIGIN }}
+      PREVIEW_REGEX: ${{ vars.PREVIEW_REGEX }}
+    # The token reaches only the two steps that need it, not npm's install scripts.
+    steps:
+      - name: Check the Modal token is set
+        env:
+          MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+          MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+        run: |
+          if [ -z "$MODAL_TOKEN_ID" ] || [ -z "$MODAL_TOKEN_SECRET" ]; then
+            echo "::error::Set the repository secrets MODAL_TOKEN_ID and MODAL_TOKEN_SECRET first (docs/DEPLOY.md)."
+            exit 1
+          fi
+          if [ -z "$SITE_ORIGIN" ]; then
+            echo "::warning::No SITE_ORIGIN variable: the API will allow no browser origin (the site can't call it)."
+          fi
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      # The chart pages /mcp serves inside Claude; modal_api.py refuses to deploy without them.
+      - run: npm ci
+        working-directory: web
+      - run: npm run build:mcp-app
+        working-directory: web
+      - uses: astral-sh/setup-uv@v6
+      # modal plus the serve set and the project (no training group): modal_api.py's deploy check
+      # imports race_engineer for the chart bundles' names; the image installs its own copy.
+      - run: uv run --locked --no-default-groups --group cloud modal deploy modal_api.py
+        working-directory: engine
+        env:
+          MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+          MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}

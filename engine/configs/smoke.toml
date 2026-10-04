@@ -1,0 +1,30 @@
+# A few minutes, end to end on the real data: `make experiments-smoke`, i.e.
+#   uv run race-engineer-experiments --grid configs/smoke.toml
+# Checks the runner, not the models: tiny models, one epoch, a few events evaluated.
+
+report = "m3_ablations_smoke.md"
+
+[base]
+d_model = 64
+n_layers = 2
+epochs = 1
+max_train = 5000
+max_val = 2000
+warmup_steps = 5
+split = "by_event"  # works at any stage of the data build ("auto" may not: see ablations.toml)
+bootstrap = 20
+eval_max_events = 2
+probe_max_train = 20000
+
+[[variant]]
+name = "baseline"
+
+[[variant]]
+name = "mse_no_context_no_gear"
+objective = "mse"
+use_context = false
+signal_channels = ["speed", "throttle", "brake", "offset_m"]
+
+[[variant]]
+name = "cnn"
+model_type = "cnn"

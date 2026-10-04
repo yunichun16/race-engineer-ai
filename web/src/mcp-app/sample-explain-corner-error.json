@@ -1,0 +1,1 @@
+{"arguments": {"event": "Sample Grand Prix", "session": "Q", "driver": "AAA", "lap": 42, "corner": 3}, "content": [{"type": "text", "text": "AAA has no usable telemetry for lap 42 at turn 3 in the 2026 Sample Grand Prix Qualifying (missing or rejected data, or the lap wasn't driven). Laps with data at turn 3: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10."}], "isError": true}

@@ -1,0 +1,26 @@
+: ping
+
+event: status
+data: {"text": "Looking for the flagged corners"}
+
+event: text
+data: {"delta": "Checking the Sample Grand Prix with find_mistakes."}
+
+event: tool_call
+data: {"id": "toolu_basic_0", "name": "find_mistakes", "input": {"event": "Sample Grand Prix", "year": 2026, "session": "Q"}}
+
+event: tool_result
+data: {"id": "toolu_basic_0", "name": "find_mistakes", "is_error": false, "summary": "2026 Sample Grand Prix Qualifying (Synthetic Circuit): 5 of 56 scored corners flagged as unusual; 3 look like driving mistakes.\nBiggest mistakes:\n- AAA lap 9 turn 3: 0.65 s.", "chart": {"bundle": "find-mistakes", "resource_uri": "ui://race-engineer/find-mistakes.html", "data": {"event": "Sample Grand Prix", "location": "Synthetic Circuit", "year": 2026, "round": 1, "session": "Qualifying", "session_code": "Q", "driver": null, "ranking": "ranked by time lost", "scored": 56, "flagged": 5, "distinct_mistakes": 3, "mistakes": [{"driver": "AAA", "team": "Team A", "lap_number": 9, "turn": "3", "also_turns": [], "type": "track_limits", "type_text": "track limits / off track (race control)", "secondary_type": "late_throttle", "time_lost_s": 0.65, "phase": "exit", "score_pct": 0.995, "lap_class": "push", "explanation": "Lap 9, turn 3: 0.65 s lost, mostly on exit; lap time deleted for track limits at turn 3; 23 km/h slower at the exit and 2.2 m/s\u00b2 less acceleration out of the corner.", "apex_m": 3000.0}, {"driver": "BBB", "team": "Team B", "lap_number": 4, "turn": "3", "also_turns": [], "type": "over_slowing", "type_text": "over-slowing", "secondary_type": "late_throttle", "time_lost_s": 0.77, "phase": "apex", "score_pct": 0.995, "lap_class": "push", "explanation": "Lap 4, turn 3: 0.77 s lost, mostly through the apex; 25 km/h slower at the slowest point and 12 km/h slower at the exit; compared with the field, as they had only 3 other clean laps here.", "apex_m": 3000.0}], "left_out": {"no_time_lost": 1}, "coverage": {"laps": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "scored_driver_laps": 14, "eligible_driver_laps": 16, "session_laps": 10, "low": false}, "note": "", "track": null}}}
+
+event: text
+data: {"delta": "AAA lost the most: 0.65 s at turn 3 on lap 9 🏁, "}
+
+event: text
+data: {"delta": "a track-limits moment named by race control (café au lait)."}
+
+event: text
+data: {"delta": "\n\n- BBB: 0.31 s at turn 7, \u00e9 escaped."}
+
+event: done
+data: {"history": [{"role": "user", "content": "Who made the biggest mistakes at the Sample Grand Prix?"}, {"role": "assistant", "content": [{"signature": "scripted-signature", "thinking": "Looking", "type": "thinking"}, {"text": "Checking the Sample Grand Prix with find_mistakes.", "type": "text"}, {"id": "toolu_basic_0", "input": {"event": "Sample Grand Prix", "year": 2026, "session": "Q"}, "name": "find_mistakes", "type": "tool_use"}]}, {"role": "user", "content": [{"type": "tool_result", "tool_use_id": "toolu_basic_0", "content": "2026 Sample Grand Prix Qualifying (Synthetic Circuit): 5 of 56 scored corners flagged as unusual; 3 look like driving mistakes.\nBiggest mistakes:\n- AAA lap 9 turn 3: 0.65 s."}]}, {"role": "assistant", "content": [{"text": "AAA lost the most.", "type": "text"}]}], "signature": "0123456789ab.5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f", "questions_used": 1, "questions_left": 7, "stop_reason": "end_turn", "model": "scripted", "usage": {"input": 2, "output": 125, "cache_read": 5499, "cache_write": 371}, "cost_usd": 0.003281, "request_id": "0ebc385d153c"}
+

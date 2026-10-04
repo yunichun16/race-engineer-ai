@@ -1,0 +1,314 @@
+/* The race summary's header, legend, readout and position chart, scoped under
+   .re-chart--race-summary. The driver colours (--a for the driver asked about, --b for the
+   winner) and --warn and --loss for the neutralised laps are in tokens.css; the focus ring and
+   the results table's styles are in base.css, shared with the other charts. */
+
+/* The rest of the field: a recessive grey that still reads as a line (a hairline --grid
+   stroke disappears where 20 lines cross). Opaque, so crossings don't darken. */
+.re-chart--race-summary {
+  --line: color-mix(in srgb, var(--fg-muted) 42%, var(--surface));
+}
+
+.re-chart--race-summary .rs-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.re-chart--race-summary .title-row,
+.re-chart--race-summary .meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 14px;
+}
+
+.re-chart--race-summary .title-row {
+  justify-content: space-between;
+}
+
+.re-chart--race-summary .title {
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--race-summary .subtitle,
+.re-chart--race-summary .meta {
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.re-chart--race-summary .meta strong {
+  color: var(--fg);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--race-summary .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.re-chart--race-summary .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 8px 1px 5px;
+  border: 1px solid var(--grid);
+  border-radius: 999px;
+  color: var(--fg);
+  font-size: 11px;
+}
+
+.re-chart--race-summary .chip.none {
+  padding-left: 8px;
+  color: var(--fg-muted);
+}
+
+/* Swatches matching the chart's bands: SC a wash, VSC hatched, red flag solid. */
+.re-chart--race-summary .sw {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.re-chart--race-summary .sw-sc {
+  background: color-mix(in srgb, var(--warn) 32%, transparent);
+}
+
+.re-chart--race-summary .sw-vsc {
+  background: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--warn) 70%, transparent) 0 1.5px,
+    transparent 1.5px 3.5px
+  );
+}
+
+.re-chart--race-summary .sw-red {
+  background: color-mix(in srgb, var(--loss) 38%, transparent);
+}
+
+.re-chart--race-summary .legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  color: var(--fg-muted);
+  font-size: 11px;
+}
+
+.re-chart--race-summary .legend .item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.re-chart--race-summary .key {
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--c);
+}
+
+.re-chart--race-summary .key-focus {
+  --c: var(--a);
+  height: 3px;
+}
+
+.re-chart--race-summary .key-winner {
+  --c: var(--b);
+}
+
+.re-chart--race-summary .key-other {
+  --c: var(--line);
+}
+
+.re-chart--race-summary .key-pit {
+  box-sizing: border-box;
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--fg-muted);
+  border-radius: 50%;
+  background: none;
+}
+
+.re-chart--race-summary .key.key-stop {
+  width: auto;
+  height: auto;
+  background: none;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.re-chart--race-summary .readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 12px;
+  min-height: 34px;
+  margin-top: 4px;
+  color: var(--fg-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--race-summary .readout strong {
+  color: var(--fg);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--race-summary .readout .key {
+  width: 10px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+/* Horizontal drags move the crosshair; vertical swipes still scroll the conversation. */
+.re-chart--race-summary svg.positions {
+  touch-action: pan-y;
+  overflow: visible;
+}
+
+.re-chart--race-summary svg .band-sc {
+  fill: var(--warn);
+  fill-opacity: 0.14;
+}
+
+.re-chart--race-summary svg .band-red {
+  fill: var(--loss);
+  fill-opacity: 0.2;
+}
+
+.re-chart--race-summary svg .hatch {
+  stroke: var(--warn);
+  stroke-width: 1.5px;
+  stroke-opacity: 0.5;
+}
+
+.re-chart--race-summary svg .band-label {
+  font-size: 9px;
+}
+
+.re-chart--race-summary svg .gridline {
+  stroke: var(--grid);
+}
+
+.re-chart--race-summary svg .pos-label {
+  font-size: 9px;
+}
+
+/* A driver's line, pit-stop rings and final ×, coloured by role. */
+.re-chart--race-summary .drv {
+  --c: var(--line);
+  --w: 1.25px;
+}
+
+.re-chart--race-summary .drv.winner {
+  --c: var(--b);
+  --w: 2px;
+}
+
+.re-chart--race-summary .drv.focus {
+  --c: var(--a);
+  --w: 2.5px;
+}
+
+.re-chart--race-summary .drv.picked {
+  --c: var(--fg);
+  --w: 2px;
+}
+
+.re-chart--race-summary .drv.winner.lift {
+  --w: 3px;
+}
+
+.re-chart--race-summary .drv.focus.lift {
+  --w: 3.5px;
+}
+
+.re-chart--race-summary .drv .line {
+  fill: none;
+  stroke: var(--c);
+  stroke-width: var(--w);
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.re-chart--race-summary .drv .pit {
+  fill: var(--surface);
+  stroke: var(--c);
+  stroke-width: 1.5px;
+}
+
+.re-chart--race-summary .drv .stop,
+.re-chart--race-summary .drv .stop-halo {
+  fill: none;
+  stroke: var(--c);
+  stroke-width: 1.75px;
+  stroke-linecap: round;
+}
+
+.re-chart--race-summary .drv .stop-halo {
+  stroke: var(--surface);
+  stroke-width: 4.5px;
+}
+
+.re-chart--race-summary .drv .dot {
+  fill: var(--c);
+  stroke: var(--surface);
+  stroke-width: 2px;
+}
+
+.re-chart--race-summary svg .end-label.strong,
+.re-chart--race-summary svg .col-label.strong {
+  fill: var(--fg);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--race-summary svg .end-label.on,
+.re-chart--race-summary svg .col-label.on {
+  fill: var(--fg);
+  font-weight: 700;
+}
+
+.re-chart--race-summary svg .cursor {
+  stroke: var(--fg);
+  stroke-opacity: 0.45;
+}
+
+.re-chart--race-summary svg .col-label {
+  font-size: 9px;
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.re-chart--race-summary th.text,
+.re-chart--race-summary td.text {
+  text-align: left;
+}
+
+.re-chart--race-summary tr.focus-row td {
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--race-summary .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@container re-chart (max-width: 480px) {
+  .re-chart--race-summary .readout {
+    min-height: 50px;
+  }
+}

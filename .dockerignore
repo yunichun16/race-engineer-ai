@@ -1,0 +1,29 @@
+# The build context of engine/Dockerfile is the repository root, which also holds tens of GB of
+# local data. Send only what the image is built from: the engine's project and source, and the
+# web app that builds the chart bundles. Everything else stays out, the data above all (F1 data
+# is never baked into an image: the served bundle is mounted at /data).
+*
+!engine/pyproject.toml
+!engine/uv.lock
+!engine/README.md
+!engine/src/
+!web/
+
+# Built or local, inside what is sent: rebuilt in the image, or never shipped.
+**/__pycache__/
+**/*.py[cod]
+engine/src/race_engineer/mcp_server/ui/
+web/node_modules/
+web/.next/
+web/out/
+web/public/snapshots/
+web/public/saved/
+web/coverage/
+web/build/
+web/.vercel/
+web/*.tsbuildinfo
+web/next-env.d.ts
+**/.env
+**/.env.*
+**/*.pem
+**/.DS_Store

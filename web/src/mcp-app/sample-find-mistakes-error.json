@@ -1,0 +1,1 @@
+{"arguments": {"event": "Sample Grand Prix", "session": "Q"}, "content": [{"type": "text", "text": "The M4 results can't be used: mistakes.parquet was built from another scoring run (2026-01-01T00:00:00+00:00/old) than the current one (2026-09-30T12:00:00+00:00/0123456789ab): run `race-engineer-infer explain` (or `make m4`)."}], "isError": true}

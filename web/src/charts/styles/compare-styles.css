@@ -1,0 +1,454 @@
+/* The style comparison, scoped under .re-chart--compare-styles. The driver colours (--a, --b)
+   and --warn are in tokens.css; the focus ring, the tables and the notes are in base.css,
+   shared with the other charts. */
+
+.re-chart--compare-styles .cs-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.re-chart--compare-styles .title {
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--compare-styles .drivers,
+.re-chart--compare-styles .meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 16px;
+}
+
+.re-chart--compare-styles .driver {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.re-chart--compare-styles .meta,
+.re-chart--compare-styles .meta-line {
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.re-chart--compare-styles .warn {
+  color: var(--warn);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.re-chart--compare-styles .key {
+  display: inline-block;
+  align-self: center;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--swatch);
+}
+
+/* Panels: a title row with its control, a caption, the chart and a live readout. */
+.re-chart--compare-styles .panel {
+  margin-top: 14px;
+}
+
+.re-chart--compare-styles .panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+}
+
+/* The section heads: h2 inside Claude, the level under the page's own heading on the website.
+   Their type and wrapping are all set here, so they look the same at any level. */
+.re-chart--compare-styles .panel-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold, 600);
+  text-wrap: wrap;
+}
+
+.re-chart--compare-styles .caption {
+  margin: 4px 0 6px;
+  color: var(--fg-muted);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.re-chart--compare-styles .clear-key {
+  white-space: nowrap;
+}
+
+.re-chart--compare-styles .dot-key {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 9px;
+  height: 9px;
+  margin: 0 4px 0 2px;
+  border-radius: 50%;
+  vertical-align: -1px;
+}
+
+.re-chart--compare-styles .dot-key.clear {
+  background: var(--fg);
+}
+
+.re-chart--compare-styles .dot-key.unclear {
+  border: 1.5px solid var(--fg-muted);
+}
+
+/* Segmented control over native radio buttons: the input stays focusable, its label shows it. */
+.re-chart--compare-styles .seg {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--grid);
+  border-radius: 7px;
+  font-size: 12px;
+}
+
+.re-chart--compare-styles .seg label {
+  position: relative;
+  padding: 3px 10px;
+  border-radius: 5px;
+  color: var(--fg-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.re-chart--compare-styles .seg input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.re-chart--compare-styles .seg label:has(input:checked) {
+  background: var(--grid);
+  color: var(--fg);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.re-chart--compare-styles .seg label:has(input:disabled) {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.re-chart--compare-styles .seg label:has(input:focus-visible) {
+  outline: 2px solid var(--color-ring-primary, var(--a));
+  outline-offset: 1px;
+}
+
+/* Differences: one row per measure, its label on the left (above below 480 px). */
+.re-chart--compare-styles .metric {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  column-gap: 12px;
+  padding: 3px 0 4px;
+  border-top: 1px solid var(--grid);
+}
+
+.re-chart--compare-styles .metric-head {
+  padding: 0;
+  border-top: 0;
+}
+
+.re-chart--compare-styles .m-label {
+  padding-top: 13px;
+  font-size: 12px;
+}
+
+.re-chart--compare-styles .metric-head .m-label {
+  padding: 0;
+}
+
+.re-chart--compare-styles .unit {
+  color: var(--fg-muted);
+  font-size: 11px;
+}
+
+.re-chart--compare-styles .ends {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--fg-muted);
+  font-size: 10.5px;
+  line-height: 1.3;
+}
+
+.re-chart--compare-styles .ends span:last-child {
+  text-align: right;
+}
+
+.re-chart--compare-styles svg .col-head {
+  fill: var(--fg-muted);
+  font-size: 10.5px;
+}
+
+.re-chart--compare-styles svg .cell-mark {
+  fill: var(--grid);
+}
+
+.re-chart--compare-styles svg .whisker {
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.re-chart--compare-styles svg .whisker.clear {
+  stroke: var(--fg);
+}
+
+/* Muted marks stay at 3:1 or more against the surface (graphics contrast) in both themes. */
+.re-chart--compare-styles svg .whisker.unclear {
+  stroke: var(--fg-muted);
+  stroke-opacity: 0.85;
+}
+
+.re-chart--compare-styles svg .dot.clear {
+  fill: var(--fg);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.re-chart--compare-styles svg .dot.unclear {
+  fill: var(--surface);
+  stroke: var(--fg-muted);
+  stroke-width: 1.5;
+}
+
+.re-chart--compare-styles svg .value {
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--compare-styles svg .value.clear {
+  fill: var(--fg);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--compare-styles svg .none {
+  font-size: 10px;
+  font-style: italic;
+}
+
+/* Horizontal drags move the readout; vertical swipes still scroll the conversation. */
+.re-chart--compare-styles .diff-grid svg,
+.re-chart--compare-styles .map svg {
+  touch-action: pan-y;
+}
+
+/* A style map whose points pick a driver (the website's onPointSelect). */
+.re-chart--compare-styles svg.selectable {
+  cursor: pointer;
+}
+
+/* Style map. */
+.re-chart--compare-styles svg .arrow {
+  stroke: var(--fg-muted);
+  stroke-opacity: 0.75;
+  stroke-width: 1.25;
+}
+
+.re-chart--compare-styles svg .arrow-head {
+  fill: var(--fg-muted);
+  fill-opacity: 0.75;
+}
+
+.re-chart--compare-styles svg .arrow-label,
+.re-chart--compare-styles svg .pt-label {
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.re-chart--compare-styles svg .arrow-label {
+  font-size: 10px;
+}
+
+.re-chart--compare-styles svg .pt-label {
+  fill: var(--fg);
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+/* Teammate links are dotted so they never read as arrows (which start at the same centre). */
+.re-chart--compare-styles svg .team-lines line {
+  stroke: var(--fg-muted);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 0.1 3.5;
+}
+
+.re-chart--compare-styles svg .pt {
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.re-chart--compare-styles svg .pt.a {
+  fill: var(--a);
+}
+
+.re-chart--compare-styles svg .pt.b {
+  fill: var(--b);
+}
+
+.re-chart--compare-styles svg .pt.other {
+  fill: var(--fg-muted);
+  fill-opacity: 0.75;
+}
+
+.re-chart--compare-styles svg .pick-ring {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 1.5;
+}
+
+/* The hover layer is redrawn on pointerdown. If it could be hit, the element under the pointer
+   would vanish between press and release, and the browser would never fire the click that
+   selects a driver. The pointer picks by distance anyway. */
+.re-chart--compare-styles svg .hover {
+  pointer-events: none;
+}
+
+.re-chart--compare-styles .legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  margin-top: 4px;
+  color: var(--fg-muted);
+  font-size: 11.5px;
+}
+
+.re-chart--compare-styles .legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.re-chart--compare-styles .swatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.re-chart--compare-styles .swatch.a {
+  background: var(--a);
+}
+
+.re-chart--compare-styles .swatch.b {
+  background: var(--b);
+}
+
+.re-chart--compare-styles .swatch.other {
+  background: var(--fg-muted);
+  opacity: 0.75;
+}
+
+.re-chart--compare-styles .line-key {
+  display: inline-block;
+  width: 14px;
+  border-top: 2px dotted var(--fg-muted);
+}
+
+.re-chart--compare-styles .readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 14px;
+  min-height: 18px;
+  margin-top: 2px;
+  color: var(--fg-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--compare-styles .readout strong {
+  color: var(--fg);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+/* The differences readout keeps room for a cell's two lines (five at 480 px and less), so
+   hovering a cell doesn't push the map down or resize the frame. */
+.re-chart--compare-styles .diff-readout {
+  min-height: 30px;
+  align-content: flex-start;
+}
+
+/* Embedding line, notes and tables. */
+.re-chart--compare-styles .embedding {
+  margin-top: 12px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--compare-styles .embedding p {
+  margin: 2px 0;
+  color: var(--fg-muted);
+}
+
+.re-chart--compare-styles .embedding strong {
+  color: var(--fg);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--compare-styles ul.notes {
+  padding-left: 18px;
+  list-style: disc;
+}
+
+.re-chart--compare-styles ul.notes li + li {
+  margin-top: 2px;
+}
+
+.re-chart--compare-styles .by-event-caption {
+  margin: 8px 0 2px;
+}
+
+.re-chart--compare-styles td.clear {
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+/* The interval under its value keeps the table within the frame. */
+.re-chart--compare-styles td .ci {
+  display: block;
+  color: var(--fg-muted);
+  font-size: 11px;
+  font-weight: normal;
+}
+
+/* Seven measures across: their headings wrap so the table fits the frame. */
+.re-chart--compare-styles .by-event th {
+  white-space: normal;
+  vertical-align: bottom;
+}
+
+.re-chart--compare-styles td.muted {
+  color: var(--fg-muted);
+}
+
+@container re-chart (max-width: 480px) {
+  .re-chart--compare-styles .metric {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .re-chart--compare-styles .m-label {
+    padding-top: 4px;
+  }
+
+  .re-chart--compare-styles .metric-head .m-label {
+    display: none;
+  }
+
+  .re-chart--compare-styles .readout {
+    min-height: 34px;
+    align-content: flex-start;
+  }
+
+  .re-chart--compare-styles .diff-readout {
+    min-height: 76px;
+  }
+}

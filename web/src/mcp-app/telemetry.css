@@ -1,0 +1,59 @@
+/* The telemetry sample's own colours and layout (MCP only: the website doesn't show it). The
+   shared tokens and chrome are in ../charts/styles. */
+
+.re-chart--telemetry {
+  --speed: #2f6fed;
+  --throttle: #1f9d55;
+  --brake: #e0443e;
+}
+
+[data-theme="dark"] .re-chart--telemetry {
+  --speed: #6ea0ff;
+  --throttle: #4cc38a;
+  --brake: #ff6b64;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .re-chart--telemetry {
+    --speed: #6ea0ff;
+    --throttle: #4cc38a;
+    --brake: #ff6b64;
+  }
+}
+
+.re-chart--telemetry .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.re-chart--telemetry .title {
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--telemetry .readout {
+  color: var(--fg-muted);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+}
+
+.re-chart--telemetry .legend {
+  display: flex;
+  gap: 14px;
+  color: var(--fg-muted);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.re-chart--telemetry .legend span::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 3px;
+  margin-right: 5px;
+  vertical-align: middle;
+  background: var(--swatch);
+}

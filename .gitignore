@@ -1,0 +1,34 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Data, models and experiment tracking stay local (F1 data isn't redistributed)
+/data/
+/models/
+mlruns/
+mlruns.db
+mlartifacts/
+.fastf1-cache/
+
+# Built MCP App chart bundle (npm run build:mcp-app)
+engine/src/race_engineer/mcp_server/ui/
+
+# Videos stay local: make demo-video writes data/demo/ (above), and the demo is attached to the
+# README rather than committed (CI's hygiene check, .github/scripts/check-tracked.sh, agrees)
+*.mp4
+*.mov
+
+# Secrets
+.env
+.env.*
+!.env.example
+.vercel/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/

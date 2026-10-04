@@ -1,0 +1,131 @@
+/* Shared by the charts: the frame and root every chart draws into, base typography and the
+   chrome every chart uses (focus ring, collapsible tables, notes). The colour tokens are in
+   tokens.css.
+
+   Every rule is scoped under .re-chart (each chart's own sheet under .re-chart--<chart>), and
+   the charts set every box and type property they rely on themselves instead of taking the
+   browser's defaults: they look the same in Claude's frame, which has no reset, and on the
+   website, under Tailwind's preflight. These sheets are unlayered, so they win over the
+   preflight whatever its selectors. */
+
+/* The container the charts' breakpoints measure (@container re-chart). Unpadded, so a 480 px
+   frame behaves like the 480 px iframe the breakpoints were written for. */
+.re-chart-frame {
+  container: re-chart / inline-size;
+  min-width: 0;
+}
+
+/* The root a chart draws into: the padding the charts' width arithmetic assumes
+   (contentWidth), and the inherited type the charts were designed with. */
+.re-chart {
+  padding: 12px 14px 8px;
+  color: var(--fg);
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  font-size: 13px;
+  line-height: normal;
+  text-align: start;
+  letter-spacing: normal;
+}
+
+/* Boxes measure their content, as by default; buttons, tables and form controls keep the
+   border box browsers give them. */
+.re-chart,
+.re-chart :where(*),
+.re-chart :where(*)::before,
+.re-chart :where(*)::after {
+  box-sizing: content-box;
+}
+
+.re-chart :where(button, table, select, input[type="radio"], input[type="checkbox"]) {
+  box-sizing: border-box;
+}
+
+/* Buttons keep the browser's own appearance keyword (every chart button draws its own border
+   and background, so none looks native either way). */
+.re-chart :where(button) {
+  appearance: auto;
+}
+
+.re-chart .status {
+  margin: 1em 0;
+  color: var(--fg-muted);
+}
+
+.re-chart svg {
+  display: block;
+  width: 100%;
+  vertical-align: baseline;
+  touch-action: none;
+}
+
+.re-chart svg text {
+  fill: var(--fg-muted);
+  font-size: 10px;
+}
+
+.re-chart svg:focus-visible {
+  outline: 2px solid var(--color-ring-primary, var(--a));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.re-chart details {
+  margin-top: 6px;
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.re-chart summary {
+  cursor: pointer;
+}
+
+.re-chart table {
+  width: 100%;
+  margin-top: 4px;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart th,
+.re-chart td {
+  padding: 3px 6px;
+  border-bottom: 1px solid var(--grid);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.re-chart td {
+  color: var(--fg);
+}
+
+.re-chart th {
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.re-chart th:first-child,
+.re-chart td:first-child {
+  text-align: left;
+}
+
+.re-chart .table-wrap {
+  overflow-x: auto;
+}
+
+.re-chart .notes {
+  margin: 6px 0 0;
+  color: var(--fg-muted);
+  font-size: 11px;
+}
+
+/* Less motion: charts never autoplay (see prefersReducedMotion in dom.ts), and nothing
+   animates in CSS. */
+@media (prefers-reduced-motion: reduce) {
+  .re-chart,
+  .re-chart *,
+  .re-chart *::before,
+  .re-chart *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

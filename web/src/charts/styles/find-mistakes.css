@@ -1,0 +1,480 @@
+/* The mistake list and its track map, scoped under .re-chart--find-mistakes. Colours are in
+   tokens.css; the focus ring on the map and the details styles are in base.css, shared with
+   the other charts. Markers are --b (one series: where the time went); type and rank are
+   always text, never colour alone. */
+
+.re-chart--find-mistakes .fm-header {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 10px;
+}
+
+.re-chart--find-mistakes .title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+}
+
+/* The title: an h1 inside Claude, the level under the page's own heading on the website. Its
+   type and wrapping are all set here, so it looks the same at any level (the site balances h1-h3). */
+.re-chart--find-mistakes .title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold, 600);
+  text-wrap: wrap;
+}
+
+.re-chart--find-mistakes .chip {
+  padding: 1px 8px;
+  border: 1px solid var(--corner);
+  border-radius: 999px;
+  color: var(--fg-muted);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.re-chart--find-mistakes .meta,
+.re-chart--find-mistakes .warn {
+  margin: 0;
+  font-size: 12px;
+}
+
+.re-chart--find-mistakes .meta {
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--find-mistakes .warn {
+  color: var(--warn);
+}
+
+.re-chart--find-mistakes .warn-icon {
+  margin-right: 4px;
+}
+
+/* Rows filtered out by the map and the unused "Show all" button. */
+.re-chart--find-mistakes [hidden] {
+  display: none !important;
+}
+
+/* Words for screen readers only. */
+.re-chart--find-mistakes .vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---- Layout: the map above the list, or left of it in a wide frame. */
+
+.re-chart--find-mistakes .fm-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.re-chart--find-mistakes .fm-body.wide {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.re-chart--find-mistakes .map-panel {
+  flex: none;
+  margin: 0;
+}
+
+.re-chart--find-mistakes .list-panel {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---- The map. */
+
+.re-chart--find-mistakes svg.map {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  /* Taps pick markers; vertical swipes still scroll the conversation. */
+  touch-action: pan-y;
+}
+
+/* Chrome's SVG stylesheet rings any focused SVG, even after a click; keep base.css's ring
+   for keyboard focus only. */
+.re-chart--find-mistakes svg.map:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.re-chart--find-mistakes svg.map .start {
+  stroke: var(--fg);
+  stroke-linecap: round;
+}
+
+.re-chart--find-mistakes svg.map .arrow {
+  fill: var(--fg-muted);
+}
+
+/* The turn numbers sit above the markers; clicks go through them to the markers. */
+.re-chart--find-mistakes svg.map .turn {
+  pointer-events: none;
+  fill: var(--fg-muted);
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-linejoin: round;
+}
+
+.re-chart--find-mistakes svg.map .turn.hit {
+  fill: var(--fg);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--find-mistakes svg.map .faint {
+  fill: var(--surface);
+  stroke: var(--b);
+  opacity: 0.55;
+}
+
+.re-chart--find-mistakes svg.map .faint.on {
+  opacity: 1;
+}
+
+.re-chart--find-mistakes svg.map .spot {
+  cursor: pointer;
+}
+
+.re-chart--find-mistakes svg.map .hit {
+  fill: transparent;
+}
+
+.re-chart--find-mistakes svg.map .dot {
+  fill: var(--b);
+  stroke: var(--surface);
+}
+
+/* The top layer: the rings round what is in hand, and the lit copies of the faint rings
+   (with a surface halo, so they show even over a marker). */
+.re-chart--find-mistakes svg.map .rings {
+  pointer-events: none;
+}
+
+.re-chart--find-mistakes svg.map .faint-lit {
+  visibility: hidden;
+}
+
+.re-chart--find-mistakes svg.map .faint-lit.on {
+  visibility: visible;
+}
+
+.re-chart--find-mistakes svg.map .faint-lit .halo {
+  fill: var(--surface);
+}
+
+.re-chart--find-mistakes svg.map .pick-ring {
+  fill: none;
+  stroke: var(--fg);
+  visibility: hidden;
+}
+
+.re-chart--find-mistakes svg.map .pick-ring.on {
+  visibility: visible;
+}
+
+.re-chart--find-mistakes svg.map .spot.dim {
+  opacity: 0.35;
+}
+
+.re-chart--find-mistakes svg.map .badge rect {
+  fill: var(--fg);
+}
+
+.re-chart--find-mistakes svg.map .badge text {
+  fill: var(--surface);
+  font-weight: var(--font-weight-semibold, 600);
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--find-mistakes .legend,
+.re-chart--find-mistakes .readout {
+  margin: 6px 0 0;
+  color: var(--fg-muted);
+  font-size: 11px;
+}
+
+.re-chart--find-mistakes .legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+}
+
+.re-chart--find-mistakes .key {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.re-chart--find-mistakes .key-dot,
+.re-chart--find-mistakes .key-faint {
+  display: inline-block;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.re-chart--find-mistakes .key-dot {
+  background: var(--b);
+}
+
+.re-chart--find-mistakes .key-faint {
+  border: 1.5px solid var(--b);
+  opacity: 0.7;
+}
+
+.re-chart--find-mistakes .readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 10px;
+  min-height: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--find-mistakes .readout strong {
+  color: var(--fg);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+/* ---- The list. */
+
+.re-chart--find-mistakes .list-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 0 4px;
+  border-bottom: 1px solid var(--grid);
+  color: var(--fg-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--find-mistakes .list-head .unit {
+  margin-left: auto;
+}
+
+.re-chart--find-mistakes button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.re-chart--find-mistakes button:focus-visible,
+.re-chart--find-mistakes .why.toggle:focus-visible {
+  outline: 2px solid var(--color-ring-primary, var(--a));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.re-chart--find-mistakes .show-all {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--fg);
+  font-size: 11px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.re-chart--find-mistakes .mistakes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* rank | driver, then where and what, then the explanation | time lost, then Explain */
+.re-chart--find-mistakes .row {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  column-gap: 8px;
+  row-gap: 2px;
+  padding: 7px 4px 7px 0;
+  border-bottom: 1px solid var(--grid);
+  box-shadow: inset 2px 0 0 transparent;
+}
+
+.re-chart--find-mistakes .row:hover {
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
+}
+
+/* The row whose corner is open beside the list (the website's markSelected). */
+.re-chart--find-mistakes .row.selected {
+  background: color-mix(in srgb, var(--fg) 7%, transparent);
+  box-shadow: inset 2px 0 0 var(--fg);
+}
+
+.re-chart--find-mistakes .row.hl {
+  background: color-mix(in srgb, var(--b) 9%, transparent);
+  box-shadow: inset 2px 0 0 var(--b);
+}
+
+.re-chart--find-mistakes .rank {
+  grid-row: 1;
+  grid-column: 1;
+  padding-left: 4px;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--find-mistakes .who {
+  grid-row: 1;
+  grid-column: 2;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.re-chart--find-mistakes .who strong {
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--find-mistakes .who > * + * {
+  margin-left: 6px;
+}
+
+.re-chart--find-mistakes .team {
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.re-chart--find-mistakes .lost {
+  grid-row: 1;
+  grid-column: 3;
+  text-align: right;
+  font-weight: var(--font-weight-semibold, 600);
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--find-mistakes .where {
+  grid-row: 2;
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 6px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--find-mistakes .row.no-explain .where {
+  grid-column: 2 / 4;
+}
+
+.re-chart--find-mistakes .also {
+  color: var(--fg-muted);
+}
+
+.re-chart--find-mistakes .type {
+  padding: 0 6px;
+  border: 1px solid var(--corner);
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.re-chart--find-mistakes .type.secondary {
+  border-style: dashed;
+  color: var(--fg-muted);
+}
+
+.re-chart--find-mistakes .explain {
+  grid-row: 2;
+  grid-column: 3;
+  align-self: center;
+  justify-self: end;
+  padding: 1px 8px;
+  border: 1px solid var(--corner);
+  border-radius: 999px;
+  background: transparent;
+  font-size: 11px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.re-chart--find-mistakes .explain:hover:not([aria-disabled="true"]) {
+  border-color: var(--fg-muted);
+}
+
+/* While the message goes out (aria-disabled, so the button keeps the focus). */
+.re-chart--find-mistakes .explain[aria-disabled="true"] {
+  color: var(--fg-muted);
+  cursor: progress;
+}
+
+.re-chart--find-mistakes .why {
+  grid-row: 3;
+  grid-column: 2 / 4;
+  margin: 2px 0 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  color: var(--fg-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.re-chart--find-mistakes .why.toggle {
+  cursor: pointer;
+}
+
+.re-chart--find-mistakes .why.open {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: none;
+}
+
+.re-chart--find-mistakes .empty {
+  margin: 4px 0 0;
+  color: var(--fg);
+  line-height: 1.45;
+}
+
+/* ---- Footer: what was left out, the laps scored, the ranking. */
+
+.re-chart--find-mistakes .fm-footer {
+  margin-top: 8px;
+  color: var(--fg-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.re-chart--find-mistakes .fm-footer p {
+  margin: 0 0 3px;
+}
+
+.re-chart--find-mistakes .fm-footer details p {
+  margin: 4px 0 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .re-chart--find-mistakes .row {
+    transition: background-color 120ms ease-out;
+  }
+}
+
+@container re-chart (max-width: 480px) {
+  .re-chart--find-mistakes .team {
+    font-size: 11px;
+  }
+
+  .re-chart--find-mistakes .row {
+    grid-template-columns: 18px minmax(0, 1fr) auto;
+    column-gap: 6px;
+  }
+}

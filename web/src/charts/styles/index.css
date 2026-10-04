@@ -1,0 +1,10 @@
+/* Every chart's styles in one sheet, for the website (app/layout.tsx imports it once). Claude's
+   MCP App pages import tokens.css, base.css and their own chart's sheet instead
+   (src/mcp-app/<page>.ts). The order matters: tokens, then base, then the charts. */
+@import "./tokens.css";
+@import "./base.css";
+@import "./compare-laps.css";
+@import "./find-mistakes.css";
+@import "./explain-corner.css";
+@import "./compare-styles.css";
+@import "./race-summary.css";

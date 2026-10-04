@@ -1,0 +1,511 @@
+/* The corner page, scoped under .re-chart--explain-corner: header, traces, track map and
+   replay, deviations table. Theme tokens (--a for this lap, --loss for time lost, --fg-muted
+   for the usual) are in tokens.css; the focus ring and the table's styles are in base.css. */
+
+.re-chart--explain-corner .ec-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.re-chart--explain-corner .title-row,
+.re-chart--explain-corner .facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 16px;
+}
+
+.re-chart--explain-corner .title-row {
+  justify-content: space-between;
+}
+
+/* The title: an h1 inside Claude, the level under the page's own heading on the website. Its
+   type and wrapping are all set here, so it looks the same at any level (the site balances h1-h3). */
+.re-chart--explain-corner .title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold, 600);
+  text-wrap: wrap;
+}
+
+.re-chart--explain-corner .subtitle {
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.re-chart--explain-corner .facts {
+  align-items: center;
+  gap: 4px 8px;
+  font-size: 12px;
+}
+
+.re-chart--explain-corner .lost strong {
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--explain-corner .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+  border: 1px solid var(--corner);
+  border-radius: 999px;
+  color: var(--fg-muted);
+  font-size: 11px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.re-chart--explain-corner .chip.flagged {
+  border-color: var(--loss);
+  color: var(--fg);
+}
+
+.re-chart--explain-corner .chip.flagged::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--loss);
+}
+
+.re-chart--explain-corner .explanation {
+  margin: 2px 0 0;
+  max-width: 72ch;
+  line-height: 1.45;
+}
+
+.re-chart--explain-corner .lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--fg-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.re-chart--explain-corner .lines strong {
+  color: var(--fg);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+/* The readout above the traces and the legend under it. The readout's height holds its longest
+   text at each width, so the chart doesn't move under the pointer as the values come and go. */
+.re-chart--explain-corner .readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 12px;
+  min-height: 32px;
+  line-height: 16px;
+  align-content: flex-start;
+  color: var(--fg-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--explain-corner .readout strong {
+  color: var(--fg);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--explain-corner .legend,
+.re-chart--explain-corner .replay-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  margin: 2px 0 4px;
+  color: var(--fg-muted);
+  font-size: 11px;
+}
+
+.re-chart--explain-corner .legend > span,
+.re-chart--explain-corner .replay-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.re-chart--explain-corner .key {
+  display: inline-block;
+  width: 16px;
+  height: 0;
+  flex: none;
+}
+
+.re-chart--explain-corner .key.lap {
+  border-top: 2px solid var(--a);
+}
+
+.re-chart--explain-corner .key.usual {
+  border-top: 2px dashed var(--fg-muted);
+}
+
+.re-chart--explain-corner .key.band,
+.re-chart--explain-corner .key.anomaly,
+.re-chart--explain-corner .key.hatch {
+  height: 9px;
+  width: 12px;
+  border-radius: 2px;
+}
+
+.re-chart--explain-corner .key.band {
+  background: color-mix(in srgb, var(--fg-muted) 22%, transparent);
+}
+
+.re-chart--explain-corner .key.anomaly {
+  background: color-mix(in srgb, var(--loss) 20%, transparent);
+}
+
+.re-chart--explain-corner .key.hatch {
+  background: repeating-linear-gradient(45deg, var(--fg-muted) 0 1.5px, transparent 1.5px 3.5px);
+  opacity: 0.7;
+}
+
+.re-chart--explain-corner .readout .key {
+  width: 10px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+/* Horizontal drags move the crosshair; vertical swipes still scroll the conversation. */
+.re-chart--explain-corner svg.traces {
+  touch-action: pan-y;
+}
+
+.re-chart--explain-corner svg .halo {
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.re-chart--explain-corner svg .panel-title {
+  font-size: 10px;
+}
+
+.re-chart--explain-corner svg .phase {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--explain-corner svg .phase.worst,
+.re-chart--explain-corner svg .anomaly-label,
+.re-chart--explain-corner svg .evidence-label {
+  fill: var(--fg);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--explain-corner svg .lane-label,
+.re-chart--explain-corner svg .note-label {
+  font-size: 9.5px;
+  fill: var(--fg);
+}
+
+/* Map and replay, side by side when there's room. */
+.re-chart--explain-corner .maps {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 12px 16px;
+  margin-top: 12px;
+}
+
+.re-chart--explain-corner .panel {
+  margin: 0;
+  min-width: 0;
+}
+
+.re-chart--explain-corner .panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 28px;
+  gap: 0 8px;
+  margin-bottom: 4px;
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.re-chart--explain-corner .panel-head strong {
+  color: var(--fg);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--explain-corner .panel figcaption {
+  margin-top: 4px;
+  color: var(--fg-muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.re-chart--explain-corner .panel figcaption strong {
+  color: var(--fg);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.re-chart--explain-corner svg.map {
+  max-height: 240px;
+}
+
+.re-chart--explain-corner .stage {
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--grid) 35%, transparent);
+}
+
+.re-chart--explain-corner svg .road {
+  fill: none;
+  stroke: var(--grid);
+  stroke-width: 7px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.re-chart--explain-corner svg .road-centre {
+  fill: none;
+  stroke: var(--surface);
+  stroke-width: 1px;
+  stroke-linejoin: round;
+}
+
+.re-chart--explain-corner svg .window,
+.re-chart--explain-corner svg .anomaly {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.re-chart--explain-corner svg .window {
+  stroke: var(--fg-muted);
+  stroke-width: 3px;
+  stroke-opacity: 0.55;
+}
+
+.re-chart--explain-corner svg .anomaly {
+  stroke: var(--loss);
+  stroke-width: 3px;
+}
+
+.re-chart--explain-corner svg .turn {
+  font-size: 10px;
+}
+
+.re-chart--explain-corner svg .turn.target {
+  fill: var(--fg);
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--explain-corner svg .car {
+  fill: var(--fg-muted);
+  stroke: var(--surface);
+  stroke-width: 2px;
+}
+
+.re-chart--explain-corner svg .car.approx {
+  fill: color-mix(in srgb, var(--fg-muted) 45%, transparent);
+  stroke: var(--fg-muted);
+  stroke-width: 1.5px;
+  stroke-dasharray: 2.5 2;
+}
+
+.re-chart--explain-corner svg .ghost {
+  fill: none;
+  stroke: var(--fg-muted);
+  stroke-width: 1.6px;
+  stroke-dasharray: 3 2;
+}
+
+.re-chart--explain-corner svg .me {
+  fill: var(--a);
+  stroke: var(--surface);
+  stroke-width: 2px;
+}
+
+.re-chart--explain-corner svg .car-label,
+.re-chart--explain-corner svg .ghost-label {
+  font-size: 10px;
+}
+
+.re-chart--explain-corner svg .me-label {
+  fill: var(--fg);
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--explain-corner svg.map .car-label,
+.re-chart--explain-corner svg.map .me-label {
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+/* Replay controls. */
+.re-chart--explain-corner .controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-top: 6px;
+}
+
+.re-chart--explain-corner .controls button,
+.re-chart--explain-corner .panel-head button {
+  min-height: 28px;
+  padding: 2px 9px;
+  border: 1px solid var(--corner);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.re-chart--explain-corner .controls button:hover,
+.re-chart--explain-corner .panel-head button:hover {
+  background: var(--grid);
+}
+
+.re-chart--explain-corner .controls .play {
+  min-width: 76px;
+}
+
+.re-chart--explain-corner .seg {
+  display: inline-flex;
+}
+
+.re-chart--explain-corner .seg button {
+  border-radius: 0;
+  margin-left: -1px;
+}
+
+.re-chart--explain-corner .seg button:first-child {
+  margin-left: 0;
+  border-radius: 6px 0 0 6px;
+}
+
+.re-chart--explain-corner .seg button:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+.re-chart--explain-corner .seg button[aria-pressed="true"] {
+  position: relative;
+  border-color: var(--fg-muted);
+  background: var(--grid);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--explain-corner .scrub {
+  flex: 1 1 120px;
+  min-width: 100px;
+  margin: 0;
+  accent-color: var(--a);
+}
+
+.re-chart--explain-corner .controls button:focus-visible,
+.re-chart--explain-corner .panel-head button:focus-visible,
+.re-chart--explain-corner .scrub:focus-visible {
+  outline: 2px solid var(--color-ring-primary, var(--a));
+  outline-offset: 2px;
+  position: relative;
+}
+
+.re-chart--explain-corner .hud {
+  min-height: 18px;
+  margin-top: 4px;
+  color: var(--fg);
+  font-size: 12px;
+  line-height: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-chart--explain-corner .dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+  box-sizing: border-box;
+}
+
+.re-chart--explain-corner .dot.me {
+  background: var(--a);
+}
+
+.re-chart--explain-corner .dot.ghost {
+  border: 1.5px dashed var(--fg-muted);
+}
+
+.re-chart--explain-corner .dot.car {
+  background: var(--fg-muted);
+}
+
+.re-chart--explain-corner .dot.car.approx {
+  background: color-mix(in srgb, var(--fg-muted) 45%, transparent);
+  border: 1.5px dashed var(--fg-muted);
+}
+
+.re-chart--explain-corner .unavailable {
+  margin: 0;
+  padding: 24px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--grid) 35%, transparent);
+  text-align: center;
+}
+
+/* Deviations table: the measure's name wraps so the numbers fit on a phone. */
+.re-chart--explain-corner .deviations td:first-child {
+  min-width: 8em;
+  white-space: normal;
+}
+
+.re-chart--explain-corner .deviations .unit {
+  color: var(--fg-muted);
+  font-size: 11px;
+}
+
+.re-chart--explain-corner .deviations tr.evidence td {
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.re-chart--explain-corner .deviations td.mark {
+  text-align: center;
+}
+
+@container re-chart (max-width: 560px) {
+  .re-chart--explain-corner .maps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .re-chart--explain-corner svg.map {
+    max-height: 200px;
+  }
+}
+
+@container re-chart (max-width: 600px) {
+  .re-chart--explain-corner .readout {
+    min-height: 48px;
+  }
+}
+
+@container re-chart (max-width: 420px) {
+  .re-chart--explain-corner .readout {
+    min-height: 64px;
+  }
+
+  /* Two lines while the car is outside the analysed stretch: keep the room for them. */
+  .re-chart--explain-corner .hud {
+    min-height: 30px;
+  }
+}
+
+/* The map and the replay take no pointer input: let touches scroll the conversation. */
+.re-chart--explain-corner svg.map,
+.re-chart--explain-corner svg.replay {
+  touch-action: auto;
+}
