@@ -21,8 +21,9 @@ and get an answer with an interactive telemetry chart, on the website or inside 
   Monaco Grand Prix." Custom connectors work on Claude's Free plan (one connector), Pro, Max,
   Team and Enterprise. To run the tools locally in the Claude desktop app instead, see
   [The MCP server in the Claude desktop app](#the-mcp-server-in-the-claude-desktop-app).
-- **The demo video:** 
-https://github.com/user-attachments/assets/1847d401-748a-497c-8d0e-7d7c33144b18
+- **The demo video:**
+<video src="[path/to/video.mp4](https://github.com/user-attachments/assets/1847d401-748a-497c-8d0e-7d7c33144b18)" width="320" height="240" controls></video>
+
 
 
 ## Screenshots
